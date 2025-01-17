@@ -1,36 +1,33 @@
+import CommentModel from '../model/comment.js';
 
-import Comment from '../model/comment.js';
-
-
-export const newComment = async (request, response) => {
+export const newComment = async (req, res) => {
     try {
-        const comment = await new Comment(request.body);
-        comment.save();
+        const newCommentInstance = await new CommentModel(req.body);
+        await newCommentInstance.save();
 
-        response.status(200).json('Comment saved successfully');
-    } catch (error) {
-        response.status(500).json(error);
+        res.status(200).json('Comment added successfully');
+    } catch (err) {
+        res.status(500).json(err);
     }
-}
+};
 
-
-export const getComments = async (request, response) => {
+export const getComments = async (req, res) => {
     try {
-        const comments = await Comment.find({ postId: request.params.id });
-        
-        response.status(200).json(comments);
-    } catch (error) {
-        response.status(500).json(error)
-    }
-}
+        const commentsList = await CommentModel.find({ postId: req.params.id });
 
-export const deleteComment = async (request, response) => {
+        res.status(200).json(commentsList);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+};
+
+export const deleteComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(request.params.id);
-        await comment.delete()
+        const commentToDelete = await CommentModel.findById(req.params.id);
+        await commentToDelete.delete();
 
-        response.status(200).json('comment deleted successfully');
-    } catch (error) {
-        response.status(500).json(error)
+        res.status(200).json('Comment removed successfully');
+    } catch (err) {
+        res.status(500).json(err);
     }
-}
+};

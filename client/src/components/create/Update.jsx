@@ -1,129 +1,147 @@
 import React, { useState, useEffect } from 'react';
-
 import { Box, styled, TextareaAutosize, Button, FormControl, InputBase } from '@mui/material';
-import { AddCircle as Add } from '@mui/icons-material';
+import { AddCircle as AddIcon } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { API } from '../../service/api';
 
-const Container = styled(Box)(({ theme }) => ({
-    margin: '50px 100px',
+const Wrapper = styled(Box)(({ theme }) => ({
+    margin: '40px 80px',
     [theme.breakpoints.down('md')]: {
-        margin: 0
-    }
+        margin: '20px',
+    },
 }));
 
-const Image = styled('img')({
+const BannerImage = styled('img')({
     width: '100%',
     height: '50vh',
-    objectFit: 'cover'
+    objectFit: 'cover',
 });
 
-const StyledFormControl = styled(FormControl)`
-    margin-top: 10px;
+const FormWrapper = styled(FormControl)`
+    margin-top: 15px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 `;
 
-const InputTextField = styled(InputBase)`
-    flex: 1;
-    margin: 0 30px;
-    font-size: 25px;
+const TitleInput = styled(InputBase)`
+    flex-grow: 1;
+    margin: 0 20px;
+    font-size: 24px;
+    border-bottom: 1px solid #ccc;
 `;
 
-const StyledTextArea = styled(TextareaAutosize)`
+const DescriptionTextarea = styled(TextareaAutosize)`
     width: 100%;
-    border: none;
-    margin-top: 50px;
-    font-size: 18px;
+    margin-top: 30px;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
     &:focus-visible {
-        outline: none;
+        outline: 2px solid #3f51b5;
     }
 `;
 
-const initialPost = {
+const placeholderImage =
+    'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
+
+const defaultPost = {
     title: '',
     description: '',
     picture: '',
     username: 'nehabhatt',
     categories: 'Tech',
-    createdDate: new Date()
-}
+    createdDate: new Date(),
+};
 
-const Update = () => {
+const UpdatePost = () => {
     const navigate = useNavigate();
-
-    const [post, setPost] = useState(initialPost);
-    const [file, setFile] = useState('');
-    const [imageURL, setImageURL] = useState('');
-
     const { id } = useParams();
 
-    const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
-    
-    useEffect(() => {
-        const fetchData = async () => {
-            let response = await API.getPostById(id);
-            if (response.isSuccess) {
-                setPost(response.data);
-            }
-        }
-        fetchData();
-    }, []);
+    const [postDetails, setPostDetails] = useState(defaultPost);
+    const [selectedFile, setSelectedFile] = useState('');
+    const [imagePreview, setImagePreview] = useState('');
 
     useEffect(() => {
-        const getImage = async () => { 
-            if(file) {
-                const data = new FormData();
-                data.append("name", file.name);
-                data.append("file", file);
-                
-                const response = await API.uploadFile(data);
+        const fetchPost = async () => {
+            const response = await API.getPostById(id);
+            if (response.isSuccess) {
+                setPostDetails(response.data);
+            }
+        };
+        fetchPost();
+    }, [id]);
+
+    useEffect(() => {
+        const uploadImage = async () => {
+            if (selectedFile) {
+                const formData = new FormData();
+                formData.append('name', selectedFile.name);
+                formData.append('file', selectedFile);
+
+                const response = await API.uploadFile(formData);
                 if (response.isSuccess) {
-                    post.picture = response.data;
-                    setImageURL(response.data);    
+                    setPostDetails((prevDetails) => ({
+                        ...prevDetails,
+                        picture: response.data,
+                    }));
+                    setImagePreview(response.data);
                 }
             }
-        }
-        getImage();
-    }, [file])
+        };
+        uploadImage();
+    }, [selectedFile]);
 
-    const updateBlogPost = async () => {
-        await API.updatePost(post);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setPostDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
+
+    const updatePost = async () => {
+        await API.updatePost(postDetails);
         navigate(`/details/${id}`);
-    }
-
-    const handleChange = (e) => {
-        setPost({ ...post, [e.target.name]: e.target.value });
-    }
+    };
 
     return (
-        <Container>
-            <Image src={post.picture || url} alt="post" />
+        <Wrapper>
+            <BannerImage src={postDetails.picture || placeholderImage} alt="Banner" />
 
-            <StyledFormControl>
+            <FormWrapper>
                 <label htmlFor="fileInput">
-                    <Add fontSize="large" color="action" />
+                    <AddIcon fontSize="large" color="action" />
                 </label>
                 <input
                     type="file"
                     id="fileInput"
-                    style={{ display: "none" }}
-                    onChange={(e) => setFile(e.target.files[0])}
+                    style={{ display: 'none' }}
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
                 />
-                <InputTextField onChange={(e) => handleChange(e)} value={post.title} name='title' placeholder="Title" />
-                <Button onClick={() => updateBlogPost()} variant="contained" color="primary">Update</Button>
-            </StyledFormControl>
+                <TitleInput
+                    name="title"
+                    placeholder="Enter post title"
+                    value={postDetails.title}
+                    onChange={handleInputChange}
+                />
+                <Button variant="contained" color="primary" onClick={updatePost}>
+                    Update
+                </Button>
+            </FormWrapper>
 
-            <StyledTextArea
-                rowsMin={5}
-                placeholder="Tell your story..."
-                name='description'
-                onChange={(e) => handleChange(e)} 
-                value={post.description}
+            <DescriptionTextarea
+                name="description"
+                minRows={5}
+                placeholder="Share your thoughts..."
+                value={postDetails.description}
+                onChange={handleInputChange}
             />
-        </Container>
-    )
-}
+        </Wrapper>
+    );
+};
 
-export default Update;
+export default UpdatePost;

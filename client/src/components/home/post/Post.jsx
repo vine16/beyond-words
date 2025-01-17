@@ -1,6 +1,6 @@
-
 import { styled, Box, Typography } from '@mui/material';
 
+// Styled components
 const Container = styled(Box)`
     border: 1px solid #d3cede;
     border-radius: 10px;
@@ -22,26 +22,30 @@ const Image = styled('img')({
 });
 
 const Text = styled(Typography)`
-    color: #878787
+    color: #878787;
     font-size: 12px;
 `;
 
 const Heading = styled(Typography)`
     font-size: 18px;
-    font-weight: 600
+    font-weight: 600;
+    margin: 10px 0;
 `;
 
 const Details = styled(Typography)`
     font-size: 14px;
     word-break: break-word;
+    text-align: center;
+    padding: 0 10px;
 `;
 
+// Helper function to add ellipsis
+const addEllipsis = (str, limit) => {
+    return str?.length > limit ? str.substring(0, limit) + '...' : str;
+};
+
 const Post = ({ post }) => {
-    const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80';
-    
-    const addEllipsis = (str, limit) => {
-        return str.length > limit ? str.substring(0, limit) + '...' : str;
-    } 
+    const url = post.picture || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80';
 
     return (
         <Container>
@@ -51,7 +55,7 @@ const Post = ({ post }) => {
             <Text>Author: {post.username}</Text>
             <Details>{addEllipsis(post.description, 100)}</Details>
         </Container>
-    )
+    );
 }
 
 export default Post;

@@ -1,55 +1,61 @@
-
 import { Box, styled, Typography, Link } from '@mui/material';
 import { GitHub, LinkedIn, Email } from '@mui/icons-material';
 
-const Banner = styled(Box)`
+const BackgroundBanner = styled(Box)`
     background-image: url(https://www.wallpapertip.com/wmimgs/23-236943_us-wallpaper-for-website.jpg);
     width: 100%;
     height: 50vh;
-    background-position: left 0px bottom 0px;
+    background-position: left bottom;
     background-size: cover;
 `;
 
-const Wrapper = styled(Box)`
+const ContentWrapper = styled(Box)`
     padding: 20px;
     & > h3, & > h5 {
-        margin-top: 50px;
+        margin-top: 40px;
     }
 `;
 
-const Text = styled(Typography)`
-    color: #878787;
+const StyledText = styled(Typography)`
+    color: #6c757d;
 `;
 
-const About = () => {
-
+const AboutPage = () => {
     return (
         <Box>
-            <Banner/>
-            <Wrapper>
-                <Typography variant="h3">Beyond Words</Typography>
-                <Text variant="h5">We are Vinay and Neha, students of Computer Engineering at Gurugram University. Passionate about technologies, we love exploring new ideas and creating innovative solutions.
-<br/>
-Need something built or simply want to chat? Reach out to us or send us an email!
+            <BackgroundBanner />
+            <ContentWrapper>
+                <Typography variant="h3">Our Journey</Typography>
+                <StyledText variant="h5">
+                    Hey there! We are Vinay and Neha, currently pursuing Computer Engineering at Gurugram University. 
+                    With a keen interest in technology, we enjoy bringing ideas to life and solving real-world problems. 
+                    <br />
+                    Want to collaborate or simply say hi? Feel free to reach out or drop us an email!
                     <Box component="span" style={{ marginLeft: 5 }}>
-                        <Link href="https://github.com/vine16" color="inherit" target="_blank"><GitHub /></Link>
+                        <Link href="https://github.com/vine16" color="inherit" target="_blank">
+                            <GitHub />
+                        </Link>
                     </Box>
-                </Text>
-                <Text variant="h5">
-                    Need something built or simply want to have chat? Reach out to us on
+                </StyledText>
+                <StyledText variant="h5">
+                    Connect with us on:
                     <Box component="span" style={{ marginLeft: 5 }}>
                         <Link href="https://www.linkedin.com/in/vinayj01/" color="inherit" target="_blank">
                             <LinkedIn />
                         </Link>
-                    </Box>  
-                        or send me an Email 
-                        <Link href="mailto:vinay1118209@gmail.com?Subject=we need some help" target="_blank" color="inherit">
-                            <Email />
-                        </Link>.
-                </Text>
-            </Wrapper>
+                    </Box>
+                    or shoot an email at 
+                    <Link 
+                        href="mailto:vinay1118209@gmail.com?Subject=Let's%20Connect!" 
+                        target="_blank" 
+                        color="inherit"
+                    >
+                        <Email />
+                    </Link>.
+                </StyledText>
+            </ContentWrapper>
         </Box>
-    )
-}
+    );
+};
 
-export default About;
+export default AboutPage;

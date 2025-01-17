@@ -1,46 +1,55 @@
-
 import { Box, styled, Typography, Link } from '@mui/material';
 import { GitHub, Instagram, Email } from '@mui/icons-material';
 
-const Banner = styled(Box)`
-    background-image: url(http://mrtaba.ir/image/bg2.jpg);
+const ContactBanner = styled(Box)`
+    background-image: url(https://via.placeholder.com/1500x500);
     width: 100%;
     height: 50vh;
-    background-position: left 0px top -100px;
+    background-position: center;
     background-size: cover;
+    filter: brightness(0.8);
 `;
 
-const Wrapper = styled(Box)`
-    padding: 20px;
-    & > h3, & > h5 {
-        margin-top: 50px;
+const ContentWrapper = styled(Box)`
+    padding: 30px;
+    & > h3 {
+        margin-top: 40px;
+        font-weight: bold;
+    }
+    & > p {
+        margin-top: 20px;
+        line-height: 1.8;
     }
 `;
 
-const Text = styled(Typography)`
-    color: #878787;
+const DescriptionText = styled(Typography)`
+    color: #555;
+    font-size: 18px;
 `;
-
 
 const Contact = () => {
     return (
         <Box>
-            <Banner />
-            <Wrapper>
-                <Typography variant="h3">Getting in touch is easy!</Typography>    
-                <Text variant="h5">
-                    Reach out to us on
+            <ContactBanner />
+            <ContentWrapper>
+                <Typography variant="h3">Let's Connect!</Typography>
+                <DescriptionText>
+                    Feel free to reach out to us on social media or drop us an email:
+                </DescriptionText>
+                <Box>
                     <Link href="https://www.instagram.com/bhatt_neha_22" color="inherit" target="_blank">
-                        <Instagram/>
+                        <Instagram style={{ marginRight: 10 }} />
                     </Link>
-                    or send us an Email 
                     <Link href="mailto:vinay1118209@gmail.com?Subject=Hi there" target="_blank" color="inherit">
-                        <Email />
-                    </Link>.
-                </Text>
-            </Wrapper>
+                        <Email style={{ marginRight: 10 }} />
+                    </Link>
+                    <Link href="https://github.com/vine16" color="inherit" target="_blank">
+                        <GitHub />
+                    </Link>
+                </Box>
+            </ContentWrapper>
         </Box>
     );
-}
+};
 
 export default Contact;
